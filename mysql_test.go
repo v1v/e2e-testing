@@ -9,6 +9,7 @@ import (
 
 	"github.com/DATA-DOG/godog"
 	"github.com/DATA-DOG/godog/colors"
+	"github.com/DATA-DOG/godog/gherkin"
 
 	testcontainers "github.com/testcontainers/testcontainers-go"
 )
@@ -85,7 +86,13 @@ func FeatureContext(s *godog.Suite) {
 	s.Step(`^MySQL "([^"]*)" is running$`, mySQLIsRunning)
 	s.Step(`^metricbeat outputs metrics to the file "([^"]*)"$`, metricbeatOutputsMetricsToTheFile)
 
-	s.BeforeScenario(func(interface{}) {
-		fmt.Println("Before scenario...")
+	s.BeforeFeature(func(f *gherkin.Feature) {
+		fmt.Println("Before feature...")
+		getDevNetwork()
+	})
+
+	s.AfterFeature(func(f *gherkin.Feature) {
+		fmt.Println("After Feature...")
+		removeDevNetwork()
 	})
 }
